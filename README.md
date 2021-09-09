@@ -16,7 +16,11 @@ The concept of this module is as follows:
 - use it as openWB charging point(s)
 - (yes, it's untested but reasonable that more than one box can be controlled)
 - as a human interface, this module simply shows a status display 
-  
+
+## Caveats
+This software is provided "as is". There is no guarantee that it works as 
+expected. There is, in particular, no guarantee that all hardware survives
+use of this software.
 
 ## Pictures
 The type of RS485/USB adapter that I use:
