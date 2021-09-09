@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <style>
+    div.center {
+	text-align: center;
+    }
+    table {
+	border: 3px solid #000000;
+	text-align: left;
+	border-collapse: collapse;
+	margin-left: auto;
+	margin-right: auto;
+    }
+    table td, table th {
+	border: 1px solid #000000;
+	padding: 5px 4px;
+    }
+    table tbody td {
+	font-size: 16px;
+    }
+    table thead {
+	background: #CFCFCF;
+	border-bottom: 3px solid #000000;
+    }
+    table thead th {
+	font-size: 15px;
+	font-weight: bold;
+	color: #000000;
+	text-align: left;
+    }
+    table tfoot {
+	font-size: 14px;
+	font-weight: bold;
+	color: #000000;
+	border-top: 3px solid #000000;
+    }
+    table tfoot td {
+	font-size: 14px;
+    }
+    .button {
+	border: none;
+	color: white;
+	padding: 7px 16px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 3px 1px;
+	cursor: pointer;
+    text-decoration: none;
+    }
+    .nbutton {
+	background-color: #4CAF50;
+    }
+    .rbutton {
+	background-color: #BA2300;
+    }
+    .loader {
+	border: 16px solid #f1f1f1;
+	border-top: 16px solid #4CAF50;
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	animation: spin 2s linear infinite;
+	position: fixed;
+	top: 15ex;
+	left: 48%;
+    }
+.message {
+        color: red;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 4ex;
+        width: 30em;
+        padding: 12px;
+        border: 2px solid red;
+    }
+    
+    @keyframes spin {
+	0%   { transform: rotate(0deg);   }
+	100% { transform: rotate(360deg); }
+    }
+  </style>
+  <script>
+    function sendXhr() {
+      if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+      } else if (window.ActiveXObject) {
+        xhr = new ActiveXObject('MSXML2.XMLHTTP');
+      } else {
+        return false;
+      }
+      xhr.onreadystatechange = xhrReadyStateHandler;
+      xhr.open("GET", "status", true);
+      xhr.send(null);
+    }
+    function xhrReadyStateHandler() {
+      if (xhr.readyState != 4) return;
+    var res = JSON.parse(xhr.responseText);
+    var date = new Date();
+    res["date"] = date.toLocaleString('de-DE');
+    // Werte aus status anpassen:
+    for(var i = 0;i < 16;i++) res["nrg" + i] = res["nrg"][i];
+		      res["nrg4"] /= 10;
+		      res["nrg5"] /= 10;
+		      res["nrg6"] /= 10;
+		      res["nrg11"]/= 100;
+		      res["eto"]  /= 10;
+		      res["dws"]  = (res["dws"] / 360000).toFixed(2);
+		      
+      for(var k in res) {
+        if(document.getElementById(k))
+          document.getElementById(k).innerHTML = res[k];
+      }
+    }
+    function getVariables() {
+       sendXhr();
+       timer=setTimeout('getVariables()',10000);
+    }
+  </script>
+
+<title>Heidelberg Energy Control: Aktuelle Werte</title>
+</head>
+  
+<body bgcolor='#ffffff'>
+  <div class="center">
+    <h2>Heidelberg Energy Control (ID <?hdec clientid?>): Aktuelle Werte</h2>
+    <p>
+      	  Identifikationsstring der Box:<br/>
+	  <?hdec get_logistic_string()?>
+    </p>
+
+    <table>
+      <tr>
+	<td>
+	  Innentemperatur der Box:
+	</td>
+	<td>
+	  <span id="tmp"><?hdec get_temperature()?></span>&thinsp;&deg;C
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  Aktuelle Ladestromvorgabe:
+	</td>
+	<td>
+	  <span id="amx"><?hdec get_current_preset()?></span>&thinsp;A
+	</td>
+      </tr>
+      <tr>
+	<td colspan="2">
+	  Strom-/Spannungswerte auf den drei Phasen:
+	</td>
+      </tr>
+      <tr>
+	<td align="right">
+	  <span id="nrg4"><?hdec get_current(1)?></span>&thinsp;A
+	</td>
+	<td>
+	  <span id="nrg0"><?hdec get_voltage(1)?></span>&thinsp;V
+	</td>
+      </tr>
+      <tr>
+	<td align="right">
+	  <span id="nrg5"><?hdec get_current(2)?></span>&thinsp;A
+	</td>
+	<td>
+	  <span id="nrg1"><?hdec get_voltage(2)?></span>&thinsp;V
+	</td>
+      </tr>
+      <tr>
+	<td align="right">
+	  <span id="nrg6"><?hdec get_current(3)?></span>&thinsp;A
+	</td>
+	<td>
+	  <span id="nrg2"><?hdec get_voltage(3)?></span>&thinsp;V
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  Aktuelle Leistungsabgabe ans Auto:
+	</td>
+	<td>
+	  <span id="nrg11"><?hdec get_power()?></span>&thinsp;kW
+	</td>
+      </tr>
+      <tr>
+	<td colspan="2">
+	  Energiewerte:
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  aktuell:
+	</td>
+	<td>
+	  <span id="dws"><?hdec get_actual_energy()?></span>&thinsp;kWh
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  gesamt:
+	</td>
+	<td>
+	  <span id="eto"><?hdec get_total_energy()?></span>&thinsp;kWh
+	</td>
+      </tr>
+    </table>
+    <p>
+      <small>
+	Auslesezeitpunkt: <span id="date"><script>var date = new Date(); document.write(date.toLocaleString('de-DE'));</script></span>
+      </small>
+    </p>
+  </div>
+  <script>
+  getVariables();
+  </script>
+</body>
+</html>
