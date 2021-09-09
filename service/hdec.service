@@ -1,0 +1,15 @@
+[Unit]
+Description=hdec
+After=syslog.target network.target
+
+[Service]
+Type=simple
+User=pi
+Group=dialout
+ExecStart=/usr/bin/python3 /var/www/hdec/hdecserver.py
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
+
