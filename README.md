@@ -11,7 +11,7 @@ the Wallbox as charging point in openWB.
 The concept of this module is as follows:
 - use the python module `heidelberg` 
 - start a minimal webserver 
-- control the wallbox by its modbus interface
+- control the wallbox by its Modbus interface
 - provide a "go-e"-like interface
 - use it as openWB charging point(s)
 - (yes, it's untested but reasonable that more than one box can be controlled)
@@ -33,7 +33,8 @@ Check, whether `minimalmodbus` is installed, as with
 If not, have a look at its [project page](https://pypi.org/project/minimalmodbus/).
 
 It is assumed that you already have at least one Heidelberg Energy Control Box
-installed, that modbus wiring is ok and that you know the modbus ID(s).
+installed, that Modbus wiring is ok and that you know the modbus ID(s). Don't
+forget to terminate the Modbus on the last box (see manual).
 
 ### Install the module
 ```
@@ -56,7 +57,10 @@ Have a look at `/var/www/hdec/config.ini` and change parameters, if needed:
 
 - standard log file is placed within the openWB ramdisk
 - webserver host is set to `0.0.0.0` which makes it accessible on all interfaces, you can restrict this to localhost by setting `host=127.0.0.1`
-- `maxclientid` is the maximum modbus ID addressed: the module makes all boxes accessible, from ID 1 up to `maxclientid`
+- `maxclientid` is the maximum Modbus ID addressed: the module makes all boxes accessible, from ID 1 up to `maxclientid`
+
+If you make changes in configuration, you have to restart the hdec.service:  
+`sudo service hdec restart`
 
 ### Check
 Surf to `http://your_raspi:8182/`
@@ -65,6 +69,13 @@ If you see a Website `Kurze Hinweise ...`, it seems to work.
 
 Surf to `http://your_raspi:8182/1/variables.html` and you should see some values
 of your box **with ID 1**. If client ID of your box is 5, ... ...I think you know what to change...
+
+### Error check
+- Modbus terminated?
+- Modbus wiring ok? Polarity matters!
+- Modbus Client ID of the box(es) ok?
+- Have a look at `/var/www/html/openWB/ramdisk/hdec.miniserver.log` (or whatever you set in `config.ini`)
+
 
 ### openWB integration
 First, add as many charging points of type Go-e as you need, give them dummy IP addresses as 9.9.9.1, 9.9.9.2 or similar. Save this configuration.
