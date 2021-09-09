@@ -32,8 +32,7 @@ The type of RS485/USB adapter that I use:
 ## Installation
 ### Prerequisites
 Check, whether `minimalmodbus` is installed, as with
-`echo "import minimalmodbus;print('Ok')" | python3`
-
+`echo "import minimalmodbus;print('Ok')" | python3`  
 If not, have a look at its [project page](https://pypi.org/project/minimalmodbus/).
 
 It is assumed that you already have at least one Heidelberg Energy Control Box
@@ -88,10 +87,9 @@ As of time of this writing, openWB's web interface does not accept port numbers
 of web servers and paths on web servers in its charging point configuration 
 page.
 
-Therefore, you have to edit `/var/www/html/openWB/openwb.conf` manually:
-
-Change 9.9.9.1 to `127.0.0.1:8182/1`,  
-change 9.9.9.2 to `127.0.0.1:8182/2`  
+Therefore, you have to edit `/var/www/html/openWB/openwb.conf` manually:  
+change 9.9.9.1 to `127.0.0.1:8182/1` (for box with Modbus Client ID 1),  
+change 9.9.9.2 to `127.0.0.1:8182/2` (for box with Modbus Client ID 2)  
 and so on.
 
 To check the successful openWB integration, you may have a look at its status page.
