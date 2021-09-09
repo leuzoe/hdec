@@ -32,6 +32,9 @@ Check, whether `minimalmodbus` is installed, as with
 
 If not, have a look at its [project page](https://pypi.org/project/minimalmodbus/).
 
+It is assumed that you already have at least one Heidelberg Energy Control Box
+installed, that modbus wiring is ok and that you know the modbus ID(s).
+
 ### Install the module
 ```
 cd /tmp
@@ -64,13 +67,13 @@ Surf to `http://your_raspi:8182/1/variables.html` and you should see some values
 of your box **with ID 1**. If client ID of your box is 5, ... ...I think you know what to change...
 
 ### openWB integration
+First, add as many charging points of type Go-e as you need, give them dummy IP addresses as 9.9.9.1, 9.9.9.2 or similar. Save this configuration.
+
 As of time of this writing, openWB's web interface does not accept port numbers
 of web servers and paths on web servers in its charging point configuration 
 page.
 
-Therefore, you have to edit `/var/www/html/openWB/openwb.conf` manually.
-
-Add as many charging points of type Go-e as you need, give them dummy IP addresses as 9.9.9.1, 9.9.9.2 or similar. After saving this configuration you have to edit `/var/www/html/openWB/openwb.conf`:
+Therefore, you have to edit `/var/www/html/openWB/openwb.conf` manually:
 
 Change 9.9.9.1 to `127.0.0.1:8182/1`,  
 change 9.9.9.2 to `127.0.0.1:8182/2`  
@@ -79,12 +82,11 @@ and so on.
 To check the successful openWB integration, you may have a look at its status page.
 
 
-## See also
+## See also, Credits
 - [openWB](https://openwb.de/main/)
 - Steffs [wbec](https://github.com/steff393/wbec)
 - [go-e API](https://github.com/goecharger/go-eCharger-API-v1/blob/master/go-eCharger%20API%20v1%20DE.md)
 - [minimalmodbus](https://pypi.org/project/minimalmodbus/)
 
-## Credits
 Fruitful discussion with openWB user "raspi-buechel" is worth being mentioned.
 
