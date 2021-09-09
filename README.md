@@ -29,6 +29,7 @@ The type of RS485/USB adapter that I use:
 ### Prerequisites
 Check, whether `minimalmodbus` is installed, as with
 `echo "import minimalmodbus;print('Ok')" | python3`
+
 If not, have a look at its [project page](https://pypi.org/project/minimalmodbus/).
 
 ### Install the module
@@ -36,7 +37,8 @@ If not, have a look at its [project page](https://pypi.org/project/minimalmodbus
 cd /tmp
 git clone https://github.com/leuzoe/hdec
 cd /var/www
-mkdir hdec
+sudo mkdir hdec
+sudo chown pi hdec
 cd hdec
 cp -ra /tmp/hdec/src/* .
 
@@ -51,7 +53,30 @@ Have a look at `/var/www/hdec/config.ini` and change parameters, if needed:
 
 - standard log file is placed within the openWB ramdisk
 - webserver host is set to `0.0.0.0` which makes it accessible on all interfaces, you can restrict this to localhost by setting `host=127.0.0.1`
-- `maxclientid` is the maximum modbus ID addressed: the module makes all boxes for ID 1 up to `maxclientid` accessible
+- `maxclientid` is the maximum modbus ID addressed: the module makes all boxes accessible, from ID 1 up to `maxclientid`
+
+### Check
+Surf to `http://your_raspi:8182/`
+
+If you see a Website `Kurze Hinweise ...`, it seems to work.
+
+Surf to `http://your_raspi:8182/1/variables.html` and you should see some values
+of your box **with ID 1**. If client ID of your box is 5, ... ...I think you know what to change...
+
+### openWB integration
+As of time of this writing, openWB's web interface does not accept port numbers
+of web servers and paths on web servers in its charging point configuration 
+page.
+
+Therefore, you have to edit `/var/www/html/openWB/openwb.conf` manually.
+
+Add as many charging points of type Go-e as you need, give them dummy IP addresses as 9.9.9.1, 9.9.9.2 or similar. After saving this configuration you have to edit `/var/www/html/openWB/openwb.conf`:
+
+Change 9.9.9.1 to `127.0.0.1:8182/1`,  
+change 9.9.9.2 to `127.0.0.1:8182/2`  
+and so on.
+
+To check the successful openWB integration, you may have a look at its status page.
 
 
 ## See also
