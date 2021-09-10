@@ -9,11 +9,11 @@ Heidelberg via a cheap RS485/USB adapter, apply some configuration and then use
 the Wallbox as charging point in openWB.
 
 The concept of this module, inprinciple, is as follows:
-- use the python lib `heidelberg`, controlling the wallbox by its Modbus interface
+- use the python lib `heidelberg` controlling the wallbox by its Modbus interface
 - start a minimal webserver 
 - provide a "Go-e"-like interface
 - use it as openWB charging point(s) (yes, it's untested but reasonable that more than one box can be controlled)
-- as a human interface, this module simply shows a status display 
+- as interface for humans, this module simply shows a status display 
 
 ## Caveats
 This software is provided "as is". There is no guarantee that it works as 
