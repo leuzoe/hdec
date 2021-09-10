@@ -8,7 +8,7 @@ You may install this python module on your openWB Raspi, connect your
 Heidelberg via a cheap RS485/USB adapter, apply some configuration and then use 
 the Wallbox as charging point in openWB.
 
-The concept of this module, inprinciple, is as follows:
+The concept of this module, in principle, is as follows:
 - use the python lib `heidelberg` controlling the wallbox by its Modbus interface
 - start a minimal webserver 
 - provide a "Go-e"-like interface
