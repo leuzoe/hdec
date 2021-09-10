@@ -57,6 +57,7 @@ sudo service hdec start
 ### Configuration
 Have a look at `/var/www/hdec/config.ini` and change parameters, if needed:
 
+- standard USB port of the RS485/USB adapter is `/dev/ttyUSB0`
 - standard log file is placed within the openWB ramdisk
 - webserver host is set to `0.0.0.0` which makes it accessible on all interfaces, you can restrict this to localhost by setting `host=127.0.0.1`
 - `maxclientid` is the maximum Modbus ID addressed: the module makes all boxes accessible, from ID 1 up to `maxclientid`
