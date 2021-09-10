@@ -8,13 +8,11 @@ You may install this python module on your openWB Raspi, connect your
 Heidelberg via a cheap RS485/USB adapter, apply some configuration and then use 
 the Wallbox as charging point in openWB.
 
-The concept of this module is as follows:
-- use the python module `heidelberg` 
+The concept of this module, inprinciple, is as follows:
+- use the python lib `heidelberg`, controlling the wallbox by its Modbus interface
 - start a minimal webserver 
-- control the wallbox by its Modbus interface
-- provide a "go-e"-like interface
-- use it as openWB charging point(s)
-- (yes, it's untested but reasonable that more than one box can be controlled)
+- provide a "Go-e"-like interface
+- use it as openWB charging point(s) (yes, it's untested but reasonable that more than one box can be controlled)
 - as a human interface, this module simply shows a status display 
 
 ## Caveats
@@ -36,8 +34,9 @@ Check, whether `minimalmodbus` is installed, as with
 If not, have a look at its [project page](https://pypi.org/project/minimalmodbus/).
 
 It is assumed that you already have at least one Heidelberg Energy Control Box
-installed, that Modbus wiring is ok and that you know the modbus ID(s). Don't
-forget to terminate the Modbus on the last box (see manual).
+installed, that RS-485/Modbus wiring is ok and that you know the Modbus ID(s). 
+Don't forget to terminate the RS-485/Modbus on the last box (see manual). The
+box must be configured to be a "follower". Modbus "leader" is your raspi.
 
 ### Install the module
 ```
@@ -81,7 +80,7 @@ of your box **with ID 1**. If client ID of your box is 5, ... ...I think you kno
 
 
 ### openWB integration
-First, add as many charging points of type Go-e as you need, give them dummy IP addresses as 9.9.9.1, 9.9.9.2 or similar. Save this configuration.
+First, add as many charging points of type "Go-e" as you need, give them dummy IP addresses as 9.9.9.1, 9.9.9.2 or similar. Save this configuration.
 
 As of time of this writing, openWB's web interface does not accept port numbers
 of web servers and paths on web servers in its charging point configuration 
@@ -98,6 +97,7 @@ To check the successful openWB integration, you may have a look at its status pa
 ## See also, Credits
 - [openWB](https://openwb.de/main/)
 - Steffs [wbec](https://github.com/steff393/wbec)
+- other HD Energy Control projects on github: [MQTT (homie) Connector](https://github.com/tmsch13/heidelberg-wallbox-connector), [Adapter issues](https://github.com/ioBroker/AdapterRequests/issues/559)
 - [go-e API](https://github.com/goecharger/go-eCharger-API-v1/blob/master/go-eCharger%20API%20v1%20DE.md)
 - [minimalmodbus](https://pypi.org/project/minimalmodbus/)
 
