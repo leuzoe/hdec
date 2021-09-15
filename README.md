@@ -16,7 +16,7 @@ gesteuert werden
 - es wird ein einfacher Webserver gestartet
 - darüber wird ein Interface wie bei der "Go-e" Wallbox zur Verfügung gestellt
 - dann kann überall dort, wo openWB einen "Go-e" Ladepunkt zur Verfügung stellt,
-die "Heidelberg verwendet werden
+die "Heidelberg" verwendet werden
 - in der Tat sollte es möglich sein, mehrere "Heidelberg" Wallboxen anzuschließen (was aber aktuell noch ungetestet ist)
 - als Ausgabe zur Kontrolle durch den menschlichen Nutzer wird eine sehr 
 einfache Status-Anzeige angeboten.
@@ -33,6 +33,14 @@ ausgetestet wurde:
 <p align="center"> 
   <img src="images/rs485usb.jpg"> 
 </p>
+
+Und dies ist ein kurzer Nachweis, dass die Anbindung des Moduls in openWB 
+arbeitet:
+
+<p align="center"> 
+  <img src="images/openWB.example.png"> 
+</p>
+
 
 ## Installation
 ### Voraussetzungen
@@ -150,6 +158,12 @@ The type of RS485/USB adapter that I use:
 
 <p align="center"> 
   <img src="images/rs485usb.jpg"> 
+</p>
+
+A short proof that this module works together with openWB:
+
+<p align="center"> 
+  <img src="images/openWB.example.png"> 
 </p>
 
 ## Installation
