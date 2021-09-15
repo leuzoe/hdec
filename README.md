@@ -1,5 +1,5 @@
 # hdec -- Ein Python Modul für die Wallbox "Heidelberg Energy Control"
-^english version: see below^
+<small>english version: see below</small>
 
 Das Ziel dieses Moduls ist es, die Wallbox "Heidelberg Energy Control" über 
 deren Modbus zu steuern. Insbesondere geht es darum, ein Lademodul für openWB 
@@ -120,7 +120,7 @@ sehen sein. Und dann natürlich auch, wenn man sein Auto zum Laden anschließt.
 
 
 
-
+____
 
 
 # hdec -- Python module for the "Heidelberg Energy Control" Wallbox 
