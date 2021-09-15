@@ -1,3 +1,128 @@
+# hdec -- Ein Python Modul für die Wallbox "Heidelberg Energy Control"
+^english version: see below^
+
+Das Ziel dieses Moduls ist es, die Wallbox "Heidelberg Energy Control" über 
+deren Modbus zu steuern. Insbesondere geht es darum, ein Lademodul für openWB 
+zur Verfügung zu stellen.
+
+Das Modul kann auf dem openWB Raspi installiert werden, die Wallbox wird über
+einen billigen RS485/USB Adapter angeschlossen, einige wenige 
+Konfigurationsschritte werden durchlaufen und dann kann die "Energy Control" 
+als Ladepunkt in openWB genutzt werden.
+
+Das Prinzip des Moduls ist - grob gesprochen - das Folgende:
+- mit der Python Library "heidelberg" kann die Wallbox über deren Modbus 
+gesteuert werden
+- es wird ein einfacher Webserver gestartet
+- darüber wird ein Interface wie bei der "Go-e" Wallbox zur Verfügung gestellt
+- dann kann überall dort, wo openWB einen "Go-e" Ladepunkt zur Verfügung stellt,
+die "Heidelberg verwendet werden
+- in der Tat sollte es möglich sein, mehrere "Heidelberg" Wallboxen anzuschließen (was aber aktuell noch ungetestet ist)
+- als Ausgabe zur Kontrolle durch den menschlichen Nutzer wird eine sehr 
+einfache Status-Anzeige angeboten.
+
+## zu Beachten
+Diese Software wird "so wie sie ist" zur Verfügung gestellt. Ob sie was tut,
+ob sie das Richtige oder das Erwartete tut, kann nicht garantiert werden.
+Insbesondere wird keine Garantie abgegeben, dass die Hardware überlebt.
+
+## Bilder
+So sehen typischerweise die RS485/USB Adapter aus, mit denen das Modul 
+ausgetestet wurde:
+
+<p align="center"> 
+  <img src="images/rs485usb.jpg"> 
+</p>
+
+## Installation
+### Voraussetzungen
+Die Python Library `minimalmodbus` muss installiert sein. Geprüft werden kann
+das z.B. mittels  
+`echo "import minimalmodbus;print('Ok')" | python3`  
+Kommt hier kein "Ok", dann schaue man auf der entsprechenden
+[Projektseite](https://pypi.org/project/minimalmodbus/), wie
+die Installation erfolgt.
+
+Außerdem wird davon ausgegangen, dass wenigestens eine "Heidelberg Energy 
+Control" Wallbox angeschlossen ist, dass deren RS-485/Modbus Verkabelung ok 
+ist und dass deren Modbus ID(s) bekannt sind. Bitte nicht vergessen, den 
+RS-485/Modbus auf der letzten Box korrekt zu terminieren, wie das in der
+Anleitung zur Box beschrieben ist. Die Box muss als "follower" konfiguriert
+werden, "leader" ist dann der Raspi.
+
+### Das Modul einrichten
+```
+cd /tmp
+git clone https://github.com/leuzoe/hdec
+cd /var/www
+sudo mkdir hdec
+sudo chown pi hdec
+cd hdec
+cp -ra /tmp/hdec/src/* .
+
+cd /etc/systemd/system
+sudo cp /tmp/hdec/service/hdec.service .
+sudo systemctl enable hdec
+sudo service hdec start
+```
+
+### Konfiguration
+Unter `/var/www/hdec/config.ini` können im Bedarfsfall die Parameter des Moduls
+angepasst werden, falls das benötigt wird:
+
+- der Standard USB Port des RS485/USB Adapters ist `/dev/ttyUSB0`
+- das Standard Log liegt auf der openWB Ramdisk
+- der `host` für den eingebauten Webserver steht auf `0.0.0.0`, sodass er auf
+allen Netzwerk-Interfaces erreichbar ist. Will man ihn nur unter `localhost`
+erreichbar machen, stellt man dies mit `host=127.0.0.1` ein
+- `maxclientid` ist die höchste Modbus ID, die angesprochen wird: das Modul
+versucht dann alle Boxen von ID 1 bis zur `maxclientid` erreichbar zu machen.
+
+Sollte an der Konfiguration etwas geändert werden, muss der hdec.service neu
+gestartet werden:  
+`sudo service hdec restart`
+
+### Überprüfen
+Surfe die Seite `http://your_raspi:8182/` an.
+
+Wenn man die Website `Kurze Hinweise ...` sieht, sollte das schon mal erledigt 
+sein.
+
+Unter `http://your_raspi:8182/1/variables.html` werden ein paar Variable der
+Box **mit der ID 1** angezeigt. Sollte es sich bei der Box um die ID 5 handeln,
+wird entsprechend `http://your_raspi:8182/5/variables.html` aufgerufen.
+
+### Prüfen im Fehlerfall
+- ist der Modbus ordentlich terminiert?
+- ist die Modbus Verkabelung ok? Es kommt auf die richtige Polung der Kabel an!
+- sind die Modbus Client ID(s) der Box(en) ok?
+- Unter `/var/www/html/openWB/ramdisk/hdec.miniserver.log` (oder was auch
+immer in `config.ini` fürs Log eingestellt ist) sieht man ggf. weitere Hinweise
+auf mögliche Fehler
+
+
+### openWB Integration
+Als erstes fügt man so viele "Go-e" Ladepunkte hinzu, wie man Heidelbergs hat.
+Im openWB Einstellungsmenü gibt man diesen dann einfach zu identifizierende
+Dummy-IP-Adressen, z.B. 9.9.9.1, 9.9.9.2 usw. Diese openWB Konfiguration wird
+gesichert.
+
+Während diese Anleitung geschrieben wird, besteht in der openWB 
+Web-Konfiguration keine Möglichkeit, den IP-Adressen der Ladepunkte Ports
+oder Pfade auf dem Webserver mitzugeben. Daher muss man
+ `/var/www/html/openWB/openwb.conf` manuell editieren:  
+9.9.9.1 wird geändert in `127.0.0.1:8182/1` (für die Box mit der Modbus ID 1),  
+9.9.9.2 wird geändert in `127.0.0.1:8182/2` (für die Box mit der Modbus ID 2)  
+und so weiter.
+
+Auf der Status Seite von openWB sollte nun die erfolgreiche Integration zu
+sehen sein. Und dann natürlich auch, wenn man sein Auto zum Laden anschließt.
+
+
+
+
+
+
 # hdec -- Python module for the "Heidelberg Energy Control" Wallbox 
 
 This python module aims at controlling the "Heidelberg Energy Control" Wallbox 
