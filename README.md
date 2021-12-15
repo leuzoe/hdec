@@ -17,7 +17,7 @@ gesteuert werden
 - darüber wird ein Interface wie bei der "Go-e" Wallbox zur Verfügung gestellt
 - dann kann überall dort, wo openWB einen "Go-e" Ladepunkt zur Verfügung stellt,
 die "Heidelberg" verwendet werden
-- in der Tat sollte es möglich sein, mehrere "Heidelberg" Wallboxen anzuschließen (was aber aktuell noch ungetestet ist)
+- in der Tat ist es möglich, mehrere "Heidelberg" Wallboxen anzuschließen
 - als Ausgabe zur Kontrolle durch den menschlichen Nutzer wird eine sehr 
 einfache Status-Anzeige angeboten.
 
@@ -110,15 +110,17 @@ auf mögliche Fehler
 
 
 ### openWB Integration
-Als erstes fügt man so viele "Go-e" Ladepunkte hinzu, wie man Heidelbergs hat.
-Im openWB Einstellungsmenü gibt man diesen dann einfach zu identifizierende
-Dummy-IP-Adressen, z.B. 9.9.9.1, 9.9.9.2 usw. Diese openWB Konfiguration wird
-gesichert.
-
 Während diese Anleitung geschrieben wird, besteht in der openWB 
 Web-Konfiguration keine Möglichkeit, den IP-Adressen der Ladepunkte Ports
-oder Pfade auf dem Webserver mitzugeben. Daher muss man
- `/var/www/html/openWB/openwb.conf` manuell editieren:  
+oder Pfade auf dem Webserver mitzugeben. Daher muss man die Konfiguration
+manuell editieren:
+ 
+Als erstes fügt man in der Web-Konfiguration so viele "Go-e" Ladepunkte hinzu, 
+wie man Heidelbergs hat. Im openWB Einstellungsmenü gibt man diesen dann 
+einfach zu identifizierende Dummy-IP-Adressen, z.B. 9.9.9.1, 9.9.9.2 usw. 
+Diese openWB Konfiguration wird gesichert.
+
+Nun editiert man  `/var/www/html/openWB/openwb.conf`:  
 9.9.9.1 wird geändert in `127.0.0.1:8182/1` (für die Box mit der Modbus ID 1),  
 9.9.9.2 wird geändert in `127.0.0.1:8182/2` (für die Box mit der Modbus ID 2)  
 und so weiter.
@@ -145,7 +147,7 @@ The concept of this module, in principle, is as follows:
 - use the python lib `heidelberg` controlling the wallbox by its Modbus interface
 - start a minimal webserver 
 - provide a "Go-e"-like interface
-- use it as openWB charging point(s) (yes, it's untested but reasonable that more than one box can be controlled)
+- use it as openWB charging point(s) (yes, more than one box can be controlled)
 - as interface for humans, this module simply shows a status display 
 
 ## Caveats
@@ -220,13 +222,15 @@ of your box **with ID 1**. If client ID of your box is 5, ... ...I think you kno
 
 
 ### openWB integration
-First, add as many charging points of type "Go-e" as you need, give them dummy IP addresses as 9.9.9.1, 9.9.9.2 or similar. Save this configuration.
-
 As of time of this writing, openWB's web interface does not accept port numbers
 of web servers and paths on web servers in its charging point configuration 
-page.
+page. Therefore, we have to do some manual editing:
 
-Therefore, you have to edit `/var/www/html/openWB/openwb.conf` manually:  
+First, add as many charging points of type "Go-e" as you need, give them 
+dummy IP addresses as 9.9.9.1, 9.9.9.2 or similar. Save this configuration.
+
+
+Then, you have to edit `/var/www/html/openWB/openwb.conf` manually:  
 change 9.9.9.1 to `127.0.0.1:8182/1` (for box with Modbus Client ID 1),  
 change 9.9.9.2 to `127.0.0.1:8182/2` (for box with Modbus Client ID 2)  
 and so on.
