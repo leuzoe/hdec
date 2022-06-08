@@ -60,7 +60,7 @@ class MyServer(BaseHTTPRequestHandler):
                 self.wb.set_current_preset(int(cmd[1]))
                 res = True
             if(cmd[0] == 'alw'):
-                self.wb.allowed(cmd[1] == "0")
+                self.wb.allow(cmd[1] != "0")
                 res = True
             self.send_response(200)
             self.send_header("Content-type", "application/json")
