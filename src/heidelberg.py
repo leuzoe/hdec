@@ -305,7 +305,17 @@ class wallbox():
             self._upd_registers(r, 600, 100)
             self._upd_registers(r, 700, 100)
             self._upd_registers(r, 800,  20)
-        self._upd_registers(r, 257, 6, functioncode=3)
+        # Register 258: Standby Function Control
+        # Read/Write is only possible with Modbus Register-Layouts Version 1.0.8
+        # In 1.0.7, it can only be written. Trying to read will lead to a timeout.
+        # Register 259: Remote Lock
+        # Read/Write is only possible with Modbus Register-Layouts Version 1.0.8
+        # In 1.0.7, it can only be written. Trying to read will lead to a timeout.
+        if r[4] > 0x107:
+            self._upd_registers(r, 257, 3, functioncode=3)
+        else:
+            self._upd_registers(r, 257, 1, functioncode=3)
+        self._upd_registers(r, 261, 2, functioncode=3)
         self._cachetime = time.time()
         self.cregs = r
         
@@ -375,11 +385,11 @@ class wallbox():
                                  "Energy Control Wallbox - it does not "
                                  "answer in the expected manner. So, be "
                                  "prepared that things may go wrong.")
+            self.modbusversion = self.cregs[4]
             if self.cregs[258] != 4:
                 self._write_register(258, 4)
             self.set_watchdog_timeout(0)
             self._get_client_registers()
-            self.modbusversion = self.cregs[4]
             self.hw_min_current = self.cregs[101]
             self.hw_max_current = self.cregs[100]
             self._allowed = not(self.get_locked_state())
