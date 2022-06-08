@@ -63,7 +63,7 @@ class wallbox():
         lock == False: box is unlocked
         """
         self._get_client_registers()
-        return(1 - (self.cregs[13] * self.cregs[259]))
+        return(not(self.cregs[13] * self.cregs[259]))
 
     def set_locked_state(self, lock):
         """
