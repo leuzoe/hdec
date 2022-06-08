@@ -132,7 +132,7 @@ class wallbox():
         self._get_client_registers()
         r17 = self.cregs[17]
         r18 = self.cregs[18]
-        return(r17 * 2**16 + r18) / 1000   
+        return((r17 * 2**16 + r18) / 1000)
 
     def get_actual_energy(self):
         """
@@ -141,7 +141,7 @@ class wallbox():
         self._get_client_registers()
         r15 = self.cregs[15]
         r16 = self.cregs[16]
-        return(r15 * 2**16 + r16) / 1000
+        return((r15 * 2**16 + r16) / 1000)
 
     def get_power(self):
         """
@@ -296,7 +296,7 @@ class wallbox():
         if(time.time() < self._cachetime + self.cache_timeout / 1000
            and not(force)):
             return
-        r = [0 for i in range(820)]
+        r = self.cregs
         self._upd_registers(r,   1, 18)
         self._upd_registers(r, 100, 34)
         if all:
