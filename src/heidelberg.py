@@ -196,15 +196,13 @@ class wallbox():
 
     def get_standby_status(self):
         self._get_client_registers()
-        if self.modbusversion < 0x108:
-            return(-1)
         return(self.cregs[258])
 
     def get_watchdog_timeout(self):
         """
         get Modbus watchdog timeout in [ms]
         """
-        return(self._get_client_registers(257))
+        return(self.cregs[257])
 
     def set_watchdog_timeout(self, timeout):
         """
@@ -297,7 +295,8 @@ class wallbox():
            and not(force)):
             return
         r = self.cregs
-        self._upd_registers(r,   1, 18)
+        self._upd_registers(r,   1,  1) # 1st attempt: (r, 1, 18)
+        self._upd_registers(r,   4, 15) # 1st attempt: (r, 1, 18)
         self._upd_registers(r, 100, 34)
         if all:
             self._upd_registers(r, 300,  19)
@@ -322,9 +321,12 @@ class wallbox():
     def _upd_registers(self, l, start, num, functioncode=4):
         if(not(self.wb) and not(self._reInitialize())):
             return
-        a = self.wb.read_registers(start, num, functioncode)
-        for i in range(start, start + num):
-            l[i] = a[i - start]
+        try:
+            a = self.wb.read_registers(start, num, functioncode)
+            for i in range(start, start + num):
+                l[i] = a[i - start]
+        except:
+            self.wb = None
 
     def _read_register(self, reg, decimals=0):
         if(not(self.wb) and not(self._reInitialize())):
@@ -366,7 +368,7 @@ class wallbox():
         
     def _reInitialize(self):
         if time.time() < self._bustime + self.bus_retry_timeout:
-            return
+            return(False)
 
         self._bustime = time.time()
         self._allowed = False
@@ -384,10 +386,11 @@ class wallbox():
                 self.logger.info("This may or may not be a Heidelberg "
                                  "Energy Control Wallbox - it does not "
                                  "answer in the expected manner. So, be "
-                                 "prepared that things may go wrong.")
+                                 "warned that things may go wrong.")
             self.modbusversion = self.cregs[4]
             if self.cregs[258] != 4:
                 self._write_register(258, 4)
+                self.cregs[258] = 4 # this is for modbus Layout < V1.0.8
             self.set_watchdog_timeout(0)
             self._get_client_registers()
             self.hw_min_current = self.cregs[101]
