@@ -230,8 +230,8 @@ class wallbox():
         s = {
             "version": "B",
             "car": "{}".format(car),
-            "amp": "{}".format(int(self.get_current_preset())),
-            "amx": "{}".format(int(self.get_current_preset())),
+            "amp": "{}".format(float(self.get_current_preset())),
+            "amx": "{}".format(float(self.get_current_preset())),
             "err": "{}".format(err),
             "ast": "0",
             "alw": "{}".format(1 if self.is_allowed() else 0),
