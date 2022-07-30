@@ -57,7 +57,7 @@ class MyServer(BaseHTTPRequestHandler):
             payload = re.sub(r'mqtt\?payload=(.*)', r'\1', self.path)
             cmd = re.split(r'=', payload)
             if(cmd[0] == "amp" or cmd[0] == "amx"):
-                self.wb.set_current_preset(int(cmd[1]))
+                self.wb.set_current_preset(float(cmd[1]))
                 res = True
             if(cmd[0] == 'alw'):
                 self.wb.allow(cmd[1] != "0")
